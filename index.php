@@ -79,9 +79,7 @@ foreach ($totals as $projectId => $totalSpent) {
 
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
-        "value" => [
-            "amount" => $totalSpent
-        ]
+        "value" => $totalSpent
     ]));
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_HTTPHEADER, [

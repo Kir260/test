@@ -1,6 +1,0 @@
-services:
-  - type: web
-    name: clickup-api
-    env: docker
-    plan: free
-    dockerfilePath: ./Dockerfile

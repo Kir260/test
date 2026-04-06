@@ -1,6 +1,5 @@
 <?php
 
-// --- БАЗОВАЯ ЗАЩИТА ---
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(403);
     exit;
@@ -9,23 +8,18 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 ignore_user_abort(true);
 set_time_limit(30);
 
-// --- ЧИТАЕМ WEBHOOK ---
 $input = file_get_contents("php://input");
 $dataWebhook = json_decode($input, true);
 
-// если нет данных — выходим
 if (!$dataWebhook) {
     exit;
 }
 
-// --- API TOKEN ---
 $apiToken = getenv("CLICKUP_API_TOKEN");
 
-// --- ТВОИ ID ---
-$poListId = "901522598601"; // PO Requests
+$poListId = "901522598601"; 
 $spentFieldId = "4e5b093e-9be9-422a-b81a-8069f7c9e23d";
 
-// ===== 1. ПОЛУЧАЕМ ВСЕ PO REQUESTS =====
 $url = "https://api.clickup.com/api/v2/list/$poListId/task";
 
 $ch = curl_init($url);
@@ -43,7 +37,6 @@ if (!isset($data['tasks'])) {
     exit;
 }
 
-// ===== 2. СЧИТАЕМ СУММЫ =====
 $totals = [];
 
 foreach ($data['tasks'] as $task) {
@@ -53,12 +46,10 @@ foreach ($data['tasks'] as $task) {
 
     foreach ($task['custom_fields'] as $field) {
 
-        // Price
         if ($field['name'] === "Price") {
             $price = $field['value'] ?? 0;
         }
 
-        // Project Link (relationship)
         if ($field['name'] === "Project Link") {
             if (!empty($field['value'][0])) {
 
@@ -80,7 +71,6 @@ foreach ($data['tasks'] as $task) {
     }
 }
 
-// ===== 3. ОБНОВЛЯЕМ PROJECTS =====
 foreach ($totals as $projectId => $totalSpent) {
 
     $url = "https://api.clickup.com/api/v2/task/$projectId/field/$spentFieldId";
@@ -101,6 +91,5 @@ foreach ($totals as $projectId => $totalSpent) {
     curl_close($ch);
 }
 
-// --- ОТВЕТ ДЛЯ WEBHOOK ---
 http_response_code(200);
 echo "OK";

@@ -18,7 +18,7 @@ if (!$dataWebhook) {
 $apiToken = getenv("CLICKUP_API_TOKEN");
 
 $poListId = "901522598601";
-$spentFieldId = "4e5b093e-9be9-422a-b81a-8069f7c9e23d";
+$spentFieldId = "c7370501-ee91-4fde-9de6-522119c8e974";
 
 $url = "https://api.clickup.com/api/v2/list/$poListId/task";
 
